@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Admin panel for managing contact submissions."
+    />
+    <title>Admin | Umakanta Mohanty</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.103.0/dist/umd/supabase.min.js" crossorigin="anonymous" defer></script>
+    <script src="supabase-config.js" defer></script>
+  </head>
+  <body>
+    <nav class="navbar">
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
+      <div class="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="admin.html" class="nav-link active">Admin</a>
+        <button class="theme-toggle" type="button" aria-pressed="false">Dark Mode</button>
+      </div>
+    </nav>
+
+    <main class="admin-main">
+      <section class="admin-section">
+        <h1>Contact Submissions</h1>
+        <div id="submissionsContainer" class="submissions-container">
+          <!-- Submissions will be loaded here -->
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <h2>Umakanta Mohanty</h2>
+          <p>UX Designer crafting thoughtful digital experiences.</p>
+        </div>
+        <nav class="footer-nav">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="projects.html">Projects</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      let supabaseClient;
+
+      // Function to format date
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      }
+
+      // Function to create submission card
+      function createSubmissionCard(submission) {
+        const card = document.createElement('article');
+        card.className = `submission-card ${submission.is_read ? 'read' : 'unread'}`;
+
+        card.innerHTML = `
+          <div class="submission-header">
+            <h3>${submission.full_name}</h3>
+            <time datetime="${submission.created_at}">${formatDate(submission.created_at)}</time>
+          </div>
+          <div class="submission-details">
+            <p><strong>Email:</strong> <a href="mailto:${submission.email}">${submission.email}</a></p>
+            <p><strong>Subject:</strong> ${submission.subject}</p>
+            <p><strong>Message:</strong></p>
+            <p class="message-text">${submission.message}</p>
+          </div>
+          <div class="submission-actions">
+            ${!submission.is_read ? '<button class="mark-read-btn" data-id="' + submission.id + '">Mark as Read</button>' : '<span class="read-status">Read</span>'}
+          </div>
+        `;
+
+        return card;
+      }
+
+      // Function to load submissions
+      async function loadSubmissions() {
+        if (!supabaseClient) {
+          console.error('Supabase client is not initialized.');
+          document.getElementById('submissionsContainer').innerHTML = '<p>Unable to load submissions right now.</p>';
+          return;
+        }
+
+        try {
+          const { data, error } = await supabaseClient
+            .from('contact_submissions')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+          if (error) throw error;
+
+          console.log('Fetched submissions from Supabase:', data);
+          const container = document.getElementById('submissionsContainer');
+          container.innerHTML = '';
+
+          if (data.length === 0) {
+            container.innerHTML = '<p>No submissions yet.</p>';
+            return;
+          }
+
+          data.forEach(submission => {
+            const card = createSubmissionCard(submission);
+            container.appendChild(card);
+          });
+
+          document.querySelectorAll('.mark-read-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+              const id = e.target.dataset.id;
+              try {
+                const { error } = await supabaseClient
+                  .from('contact_submissions')
+                  .update({ is_read: true })
+                  .eq('id', id);
+
+                if (error) throw error;
+                loadSubmissions();
+              } catch (error) {
+                console.error('Error marking as read:', error);
+                alert('Failed to mark as read. Please try again.');
+              }
+            });
+          });
+
+        } catch (error) {
+          console.error('Error loading submissions:', error);
+          document.getElementById('submissionsContainer').innerHTML = '<p>Error loading submissions. Please check the console for details.</p>';
+        }
+      }
+
+      window.addEventListener('load', () => {
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        loadSubmissions();
+      });
+    </script>
+  </body>
+</html>

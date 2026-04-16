@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Contact Umakanta Mohanty for UX projects, collaborations, and design opportunities."
+    />
+    <title>Contact | Umakanta Mohanty</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.103.0/dist/umd/supabase.min.js" crossorigin="anonymous" defer></script>
+  </head>
+  <body>
+    <nav class="navbar">
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
+      <div class="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="contact.html" class="nav-link active">Contact</a>
+        <button class="theme-toggle" type="button" aria-pressed="false">Dark Mode</button>
+      </div>
+    </nav>
+
+    <main class="contact-main">
+      <section class="contact-layout">
+        <article class="contact-form-card">
+          <h1>Let's Connect</h1>
+          <p>
+            Have a project in mind or want to collaborate? Fill out the form
+            and I'll get back to you soon.
+          </p>
+
+          <form id="contactForm" class="contact-form">
+            <label for="fullName">Full Name</label>
+            <input id="fullName" name="fullName" type="text" required />
+
+            <label for="emailAddress">Email Address</label>
+            <input id="emailAddress" name="emailAddress" type="email" required />
+
+            <label for="subject">Subject</label>
+            <select id="subject" name="subject" required>
+              <option value="" disabled selected>Select a subject</option>
+              <option value="Project Enquiry">Project Enquiry</option>
+              <option value="Collaboration">Collaboration</option>
+              <option value="Just Saying Hi">Just Saying Hi</option>
+              <option value="Other">Other</option>
+            </select>
+
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="6" required></textarea>
+
+            <button type="submit" class="submit-button">
+              <span class="button-text">Submit</span>
+              <div class="loading-spinner" id="loadingSpinner"></div>
+            </button>
+            <p id="formSuccessMessage" class="success-message" aria-live="polite">
+              Thank you! Your message has been sent successfully.
+            </p>
+            <p id="formErrorMessage" class="error-message" aria-live="polite"></p>
+          </form>
+        </article>
+
+        <aside class="contact-info-card">
+          <h2>Umakanta's Contact Details</h2>
+          <p>
+            <strong>Location:</strong><br />
+            Bengaluru, India
+          </p>
+          <p>
+            <strong>Email:</strong><br />
+            <a href="mailto:umakanta.ux@example.com">umakanta.ux@example.com</a>
+          </p>
+          <p>
+            <strong>LinkedIn:</strong><br />
+            <a
+              href="https://www.linkedin.com/in/umakanta-mohanty"
+              target="_blank"
+              rel="noopener noreferrer"
+              >linkedin.com/in/umakanta-mohanty</a
+            >
+          </p>
+        </aside>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <h2>Umakanta Mohanty</h2>
+          <p>UX Designer crafting thoughtful digital experiences.</p>
+        </div>
+
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="projects.html">Projects</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+
+        <div class="footer-social">
+          <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer"
+            >LinkedIn</a
+          >
+          <a href="https://dribbble.com" target="_blank" rel="noopener noreferrer"
+            >Dribbble</a
+          >
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+
+        <p class="footer-copy">© 2026 Umakanta Mohanty. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="supabase-config.js" defer></script>
+    <script src="script.js" defer></script>
+  </body>
+</html>
